@@ -10,6 +10,10 @@ public:
     ConversationScene();
     void init() override;
     void update(float dt) override;
+    void render() override{}
+    void reset() override{}
+    void shutdown() override{}
+
 
     void setCurrentNode(const std::string& nodeId);
     ConversationNode* getCurrentNode();

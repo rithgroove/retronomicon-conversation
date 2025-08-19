@@ -24,6 +24,7 @@ ConversationScene* ConversationLoader::loadFromJSON(const std::string& filename)
             ConversationNode node;
             node.id = id;
 
+            std::cout<< "test 1"<<std::endl;
             if (nodeData.contains("speaker")) node.speaker = nodeData["speaker"];
             if (nodeData.contains("text")) node.text = nodeData["text"];
             if (nodeData.contains("expression")) node.expression = nodeData["expression"];
@@ -32,6 +33,7 @@ ConversationScene* ConversationLoader::loadFromJSON(const std::string& filename)
                 node.next = nodeData["next"];
             }
 
+            std::cout<< "test 2"<<std::endl;
             if (nodeData.contains("choices")) {
                 for (auto& choiceData : nodeData["choices"]) {
                     Choice c;
@@ -41,17 +43,20 @@ ConversationScene* ConversationLoader::loadFromJSON(const std::string& filename)
                 }
             }
 
+            std::cout<< "test 3"<<std::endl;
             if (nodeData.contains("actions")) {
-                for (auto& actionData : nodeData["actions"]) {
-                    Action a;
-                    a.type = actionData.value("type", "");
-                    a.target = actionData.value("target", "");
-                    a.value = actionData.value("value", "");
-                    a.duration = actionData.value("duration", 0.0f);
-                    node.actions.push_back(a);
-                }
+                std::cout<< "To Do : Actions"<<std::endl;
+                // for (auto& actionData : nodeData["actions"]) {
+                //     Action a;
+                //     a.type = actionData.value("type", "");
+                //     a.target = actionData.value("target", "");
+                //     a.value = actionData.value("value", "");
+                //     a.duration = actionData.value("duration", 0.0f);
+                //     node.actions.push_back(a);
+                // }
             }
 
+            std::cout<< "test 4"<<std::endl;
             scene->m_nodes[id] = node;
         }
     }
