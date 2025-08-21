@@ -1,5 +1,6 @@
 #include "retronomicon/lib/conversation/conversation_loader.h"
 #include "retronomicon/lib/conversation/conversation_node.h"
+#include "retronomicon/lib/conversation/choice.h"
 #include <nlohmann/json.hpp>
 #include <fstream>
 #include <iostream>
@@ -36,9 +37,7 @@ ConversationScene* ConversationLoader::loadFromJSON(const std::string& filename)
             std::cout<< "test 2"<<std::endl;
             if (nodeData.contains("choices")) {
                 for (auto& choiceData : nodeData["choices"]) {
-                    Choice c;
-                    c.text = choiceData["text"];
-                    c.next = choiceData["next"];
+                    Choice c(choiceData["text"],choiceData["next"]);
                     node.choices.push_back(c);
                 }
             }

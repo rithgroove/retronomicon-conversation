@@ -1,5 +1,5 @@
-#include "speaker.h"
-#include "retronomicon/lib/animation/animation_manager.h"
+#include "retronomicon/lib/conversation/speaker.h"
+#include "retronomicon/lib/animation/animation_component.h"
 #include <iostream>
 
 namespace retronomicon::lib::conversation {
@@ -9,9 +9,9 @@ void Speaker::setExpression(const std::string& expression) {
 
     if (!m_entity) return;
 
-    auto anim = m_entity->getComponent<retronomicon::lib::animation::AnimationManager>();
+    auto anim = m_entity->getComponent<retronomicon::lib::animation::AnimationComponent>();
     if (anim) {
-        anim->play(expression);  // assumes AnimationManager supports named states
+        anim->changeClip(expression);  // assumes AnimationManager supports named states
     } else {
         std::cout << "[Speaker] Entity has no AnimationManager, cannot set expression "
                   << expression << "\n";

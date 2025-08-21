@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 #include <optional>
-
+#include "choice.h"
 namespace retronomicon::lib::conversation {
 
 struct Action {

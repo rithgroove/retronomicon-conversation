@@ -1,5 +1,5 @@
 #pragma once
-#import <string>
+#include <string>
 
 namespace retronomicon::lib::conversation{
     class Choice {

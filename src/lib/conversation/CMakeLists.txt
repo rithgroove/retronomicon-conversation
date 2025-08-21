@@ -1,34 +1,18 @@
-# src/lib/conversation/CMakeLists.txt
-
-cmake_minimum_required(VERSION 3.15)
-
-set(CONVERSATION_SOURCES
-    conversation_scene.cpp
-    conversation_node.cpp
-    conversation_system.cpp
-    conversation_loader.cpp
+file(GLOB_RECURSE CONVERSATION_SRC CONFIGURE_DEPENDS
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
 )
 
-set(CONVERSATION_HEADERS
-    ${RETRO_CONVERSATION_INCLUDE_DIR}/retronomicon/lib/conversation/conversation_scene.h
-    ${RETRO_CONVERSATION_INCLUDE_DIR}/retronomicon/lib/conversation/conversation_node.h
-    ${RETRO_CONVERSATION_INCLUDE_DIR}/retronomicon/lib/conversation/conversation_system.h
-    ${RETRO_CONVERSATION_INCLUDE_DIR}/retronomicon/lib/conversation/conversation_loader.h
-)
-
-add_library(retronomicon-conversation STATIC
-    ${CONVERSATION_SOURCES}
-    ${CONVERSATION_HEADERS}
-)
+add_library(retronomicon-conversation ${CONVERSATION_SRC})
 
 target_include_directories(retronomicon-conversation
     PUBLIC
-        ${RETRO_CONVERSATION_INCLUDE_DIR}
+        ${RETRO_CONVERSATION_DIR}/include
         ${RETRO_CONVERSATION_DIR}/external/json/include
+        ${RETRO_INCLUDE_DIR}   # retronomicon's include directory
 )
 
 target_link_libraries(retronomicon-conversation
     PUBLIC
-        retronomicon
+        retronomicon          # link the base engine
         nlohmann_json::nlohmann_json
 )

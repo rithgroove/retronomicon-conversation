@@ -1,5 +1,5 @@
-#import <sstream>
-#import "retronomicon/lib/conversation/choice.h"
+#include <sstream>
+#include "retronomicon/lib/conversation/choice.h"
 
 namespace retronomicon::lib::conversation{
 
@@ -11,7 +11,9 @@ namespace retronomicon::lib::conversation{
      * @param text saved to m_text
      * @param next saved to m_next
      */
-    Choice::Choice(std::string text, std::string next): m_text(text),m_next(next);
+    Choice::Choice(std::string text, std::string next): m_text(text),m_next(next){
+
+    }
 
     /***************************** To String *****************************/
     
@@ -29,4 +31,4 @@ namespace retronomicon::lib::conversation{
         return oss.str();
     }
 
-};
+}

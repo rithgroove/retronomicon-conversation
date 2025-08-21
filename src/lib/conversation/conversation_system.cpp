@@ -13,11 +13,11 @@ void ConversationSystem::update(float dt, ConversationScene* scene) {
     if (!node->choices.empty()) {
         std::cout << "Choices available:\n";
         for (size_t i = 0; i < node->choices.size(); i++) {
-            std::cout << i << ") " << node->choices[i].text << "\n";
+            std::cout << i << ") " << node->choices[i].getText() << "\n";
         }
 
         // For demo: always auto-pick the first choice
-        scene->setCurrentNode(node->choices[0].next);
+        scene->setCurrentNode(node->choices[0].getNext());
     } else if (node->next.has_value()) {
         scene->setCurrentNode(node->next.value());
     }
