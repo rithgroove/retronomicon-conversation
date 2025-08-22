@@ -3,14 +3,8 @@
 #include <vector>
 #include <optional>
 #include "choice.h"
+#include "action.h"
 namespace retronomicon::lib::conversation {
-
-struct Action {
-    std::string type;   // e.g. "expression", "sound", "shake"
-    std::string target; // e.g. "Hero", "screen"
-    std::string value;  // e.g. "sad", "footstep.wav"
-    float duration = 0.0f; // optional
-};
 
 struct ConversationNode {
     std::string id;

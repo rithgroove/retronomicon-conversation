@@ -18,14 +18,14 @@ namespace retronomicon::lib::conversation{
             /**
              * @brief setter for m_text
              * 
-             * @param text the text
+             * @param text (the text)
              */
             void setText(std::string text) { m_text = text;}
 
             /**
              * @brief setter for m_next
              * 
-             * @param text the next
+             * @param next (the next)
              */
             void setNext(std::string next) { m_next = next;}
 
