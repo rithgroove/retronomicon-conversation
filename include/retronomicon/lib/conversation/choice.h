@@ -36,14 +36,14 @@ namespace retronomicon::lib::conversation{
              * 
              * @return the text
              */
-            std::string getText() {return m_text;}
+            const std::string& getText() const { return m_text; }
 
             /**
              * @brief getter for m_next
              * 
              * @return the m_next value
              */
-            std::string getNext() {return m_next;}
+            const std::string& getNext() const { return m_next; }
 
             /***************************** Operator Overload *****************************/
 

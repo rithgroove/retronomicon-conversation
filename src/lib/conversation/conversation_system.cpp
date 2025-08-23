@@ -9,17 +9,17 @@ void ConversationSystem::update(float dt, ConversationScene* scene) {
     auto* node = scene->getCurrentNode();
     if (!node) return;
 
-    // Example: process choices (in real use, tie into InputSystem)
-    if (!node->choices.empty()) {
+    const auto& choices = node->getChoices();
+    if (!choices.empty()) {
         std::cout << "Choices available:\n";
-        for (size_t i = 0; i < node->choices.size(); i++) {
-            std::cout << i << ") " << node->choices[i].getText() << "\n";
+        for (size_t i = 0; i < choices.size(); i++) {
+            std::cout << i << ") " << choices[i].getText() << "\n";
         }
 
         // For demo: always auto-pick the first choice
-        scene->setCurrentNode(node->choices[0].getNext());
-    } else if (node->next.has_value()) {
-        scene->setCurrentNode(node->next.value());
+        scene->setCurrentNode(choices[0].getNext());
+    } else if (node->getNext().has_value()) {
+        scene->setCurrentNode(node->getNext().value());
     }
 }
 

@@ -24,34 +24,48 @@ ConversationScene* ConversationLoader::loadFromJSON(const std::string& filename)
     if (j.contains("nodes")) {
         for (auto& [id, nodeData] : j["nodes"].items()) {
             ConversationNode node;
-            node.id = id;
+            node.setId(id);
 
-            if (nodeData.contains("speaker")) node.speaker = nodeData["speaker"];
-            if (nodeData.contains("text")) node.text = nodeData["text"];
-            if (nodeData.contains("expression")) node.expression = nodeData["expression"];
+            if (nodeData.contains("speaker")) 
+                node.setSpeaker(nodeData["speaker"].get<std::string>());
+            if (nodeData.contains("text")) 
+                node.setText(nodeData["text"].get<std::string>());
+            if (nodeData.contains("expression")) 
+                node.setExpression(nodeData["expression"].get<std::string>());
 
             if (nodeData.contains("next") && !nodeData["next"].is_null()) {
-                node.next = nodeData["next"];
+                node.setNext(nodeData["next"].get<std::string>());
             }
 
             if (nodeData.contains("choices")) {
+                std::vector<Choice> choices;
                 for (auto& choiceData : nodeData["choices"]) {
-                    Choice c(choiceData["text"],choiceData["next"]);
-                    node.choices.push_back(c);
+                    Choice c(choiceData["text"].get<std::string>(),
+                             choiceData["next"].get<std::string>());
+                    choices.push_back(c);
                 }
+                node.setChoices(choices);
             }
 
             if (nodeData.contains("actions")) {
-                std::cout<< "To Do : Actions"<<std::endl;
+                std::cout << "To Do : Actions" << std::endl;
+                std::vector<Action> actions;
                 for (auto& actionData : nodeData["actions"]) {
-                    Action a(actionData.value("type", ""),actionData.value("target", ""),actionData.value("value", ""),actionData.value("duration", 0.0f));
-                    node.actions.push_back(a);
+                    Action a(
+                        actionData.value("type", ""),
+                        actionData.value("target", ""),
+                        actionData.value("value", ""),
+                        actionData.value("duration", 0.0f)
+                    );
+                    actions.push_back(a);
                 }
+                node.setActions(actions);
             }
 
             scene->m_nodes[id] = node;
         }
     }
+
 
     return scene;
 }

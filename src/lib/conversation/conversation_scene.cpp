@@ -18,8 +18,8 @@ namespace retronomicon::lib::conversation{
     void ConversationScene::update(float dt) {
         // Example: simple debug print of current node
         if (m_currentNode) {
-            std::cout << m_currentNode->speaker << ": " 
-                      << m_currentNode->text << std::endl;
+            std::cout << m_currentNode->getSpeaker() << ": " 
+                      << m_currentNode->getText() << std::endl;
         }
     }
 
