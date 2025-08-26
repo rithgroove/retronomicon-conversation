@@ -11,7 +11,7 @@ void Speaker::setExpression(const std::string& expression) {
 
     auto anim = m_entity->getComponent<retronomicon::lib::animation::AnimationComponent>();
     if (anim) {
-        anim->changeClip(expression);  // assumes AnimationManager supports named states
+        anim->changeClip(expression);  // assumes AnimationManager supoprts named states
     } else {
         std::cout << "[Speaker] Entity has no AnimationManager, cannot set expression "
                   << expression << "\n";
