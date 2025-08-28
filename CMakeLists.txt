@@ -8,7 +8,7 @@ set(RETRO_CONVERSATION_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(RETRO_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../retronomicon/include)
 
 # External libraries
-add_subdirectory(external/json)
+# add_subdirectory(external/json)
 
 # Build conversation sources
 add_subdirectory(src)
