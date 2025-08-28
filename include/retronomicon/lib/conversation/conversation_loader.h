@@ -20,7 +20,7 @@ namespace retronomicon::lib::conversation {
              * @param filename Path to the JSON file.
              * @return Pointer to a new ConversationScene, or nullptr on failure.
              */
-            static ConversationScene* loadFromJSON(const std::string& filename);
+            static std::shared_ptr<ConversationScene> loadFromJSON(const std::string& filename);
 
             /**
              * @brief Load a conversation scene from a raw JSON string.
@@ -28,7 +28,7 @@ namespace retronomicon::lib::conversation {
              * @param jsonString JSON string containing conversation data.
              * @return Pointer to a new ConversationScene, or nullptr on failure.
              */
-            static ConversationScene* loadFromString(const std::string& jsonString);
+            static std::shared_ptr<ConversationScene> loadFromString(const std::string& jsonString);
 
             /**
              * @brief Load a conversation scene from a TextAsset.
@@ -36,7 +36,7 @@ namespace retronomicon::lib::conversation {
              * @param asset Shared pointer to a TextAsset containing JSON conversation data.
              * @return Pointer to a new ConversationScene, or nullptr on failure.
              */
-            static ConversationScene* loadFromTextAsset(const std::shared_ptr<TextAsset> asset);
+            static std::shared_ptr<ConversationScene> loadFromTextAsset(const std::shared_ptr<TextAsset> asset);
 
         private:
             /**
@@ -45,7 +45,7 @@ namespace retronomicon::lib::conversation {
              * @param j JSON object already parsed.
              * @return Pointer to a new ConversationScene.
              */
-            static ConversationScene* parseJson(const json& j);
+            static std::shared_ptr<ConversationScene> parseJson(const json& j);
     };
 
 } // namespace retronomicon::lib::conversation

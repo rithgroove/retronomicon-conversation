@@ -6,11 +6,10 @@
 #include "retronomicon/lib/conversation/choice.h"
 #include "retronomicon/lib/conversation/action.h"
 
-
-namespace retronomicon::lib::conversation{
+namespace retronomicon::lib::conversation {
     using json = nlohmann::json;
 
-    ConversationScene* ConversationLoader::loadFromJSON(const std::string& filename) {
+    std::shared_ptr<ConversationScene> ConversationLoader::loadFromJSON(const std::string& filename) {
         std::ifstream file(filename);
         if (!file.is_open()) {
             std::cerr << "[ConversationLoader] Failed to open file: " << filename << std::endl;
@@ -22,7 +21,7 @@ namespace retronomicon::lib::conversation{
         return parseJson(j);
     }
 
-    ConversationScene* ConversationLoader::loadFromString(const std::string& jsonString) {
+    std::shared_ptr<ConversationScene> ConversationLoader::loadFromString(const std::string& jsonString) {
         json j;
         try {
             j = json::parse(jsonString);
@@ -33,7 +32,9 @@ namespace retronomicon::lib::conversation{
         return parseJson(j);
     }
 
-    ConversationScene* ConversationLoader::loadFromTextAsset(const std::shared_ptr<retronomicon::lib::asset::TextAsset> asset) {
+    std::shared_ptr<ConversationScene> ConversationLoader::loadFromTextAsset(
+        const std::shared_ptr<retronomicon::lib::asset::TextAsset> asset) 
+    {
         if (!asset) {
             std::cerr << "[ConversationLoader] Null TextAsset provided" << std::endl;
             return nullptr;
@@ -41,8 +42,8 @@ namespace retronomicon::lib::conversation{
         return loadFromString(asset->getContent());
     }
 
-    ConversationScene* ConversationLoader::parseJson(const json& j) {
-        auto* scene = new ConversationScene();
+    std::shared_ptr<ConversationScene> ConversationLoader::parseJson(const json& j) {
+        auto scene = std::make_shared<ConversationScene>();
 
         if (j.contains("nodes")) {
             for (auto& [id, nodeData] : j["nodes"].items()) {
@@ -90,5 +91,4 @@ namespace retronomicon::lib::conversation{
 
         return scene;
     }
-
 }
