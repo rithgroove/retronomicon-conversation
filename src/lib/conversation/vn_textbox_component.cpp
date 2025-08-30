@@ -1,11 +1,12 @@
 #include "retronomicon/lib/conversation/vn_textbox_component.h"
 #include <SDL.h>
 #include <algorithm>
+#include <iostream>
 
 using namespace retronomicon::lib::conversation;
 
 VNTextBoxComponent::VNTextBoxComponent(std::shared_ptr<asset::FontAsset> font,
-                                       std::shared_ptr<ui::NineSlicePanelComponent> panel,
+                                       NineSlicePanelComponent* panel,
                                        int maxWidth,
                                        int padding)
     : m_font(std::move(font)),
@@ -13,7 +14,7 @@ VNTextBoxComponent::VNTextBoxComponent(std::shared_ptr<asset::FontAsset> font,
       m_maxWidth(maxWidth),
       m_padding(padding) {}
 
-void VNTextBoxComponent::setNode(std::shared_ptr<ConversationNode> node) {
+void VNTextBoxComponent::setNode(ConversationNode* node) {
     m_node = std::move(node);
     m_currentCharIndex = 0;
     m_timeAccumulator = 0.0f;
@@ -22,7 +23,15 @@ void VNTextBoxComponent::setNode(std::shared_ptr<ConversationNode> node) {
 }
 
 void VNTextBoxComponent::update(float deltaTime) {
-    if (!m_node || m_finished) return;
+    std::cout<< "Masuk Update" <<std::endl;
+    if (!m_node){
+        std::cout<< "[update] nul" <<std::endl;
+        return;
+    }
+    if (m_finished){
+        std::cout<< "[update] m_finished" <<std::endl;
+        return;        
+    }
 
     m_timeAccumulator += deltaTime;
     while (m_timeAccumulator >= m_charDelay) {
@@ -38,15 +47,26 @@ void VNTextBoxComponent::update(float deltaTime) {
 }
 
 void VNTextBoxComponent::render(SDL_Renderer* renderer) {
-    if (!m_node || !m_transform) return;
+    std::cout<< "Masuk render" <<std::endl;
+    if (!m_node){
+        std::cout<< "[render] m_node nul" <<std::endl;
+        return;
+    }
+    if (!m_transform){
+        std::cout<< "[render] m_transform null" <<std::endl;
+        return;        
+    }
 
     // Position comes from TransformComponent
     Vec2 renderPos = m_transform->getRenderPosition();
     int x = renderPos.x;
     int y = renderPos.y;
 
-    int boxW = m_maxWidth + 2 * m_padding;
+    int boxW = m_maxWidth - 2 * m_padding;
     int boxH = static_cast<int>(m_wrappedLines.size()) * m_font->getLineHeight() + 2 * m_padding;
+    if (boxH < m_minHeight){
+        boxH = m_minHeight;
+    }
 
     m_panel->setSize(boxW, boxH);
     m_panel->render(renderer);
@@ -59,14 +79,19 @@ void VNTextBoxComponent::render(SDL_Renderer* renderer) {
 
         size_t charsToDraw = std::min(charsRemaining, line.size());
         std::string visible = line.substr(0, charsToDraw);
-
-        m_font->renderText(renderer, visible, x + m_padding, drawY);
+        std::cout << "visible = " <<visible<<std::endl;
+        std::cout << "x =  " << x + m_padding <<std::endl;
+        std::cout << "y =  " << drawY <<std::endl;
+        m_font->renderText(renderer, visible, x + m_padding, drawY,SDL_Color{255, 255, 255, 255});
 
         charsRemaining -= charsToDraw;
         drawY += m_font->getLineHeight();
     }
 }
 
+Rect VNTextBoxComponent::getSize(){
+    return m_panel->getSize();
+}
 
 void VNTextBoxComponent::skipToFullText() {
     if (!m_node) return;

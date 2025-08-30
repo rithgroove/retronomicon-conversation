@@ -11,20 +11,24 @@
 #include "retronomicon/lib/core/component.h"
 #include "retronomicon/lib/core/transform_component.h"
 #include "retronomicon/lib/core/renderable.h"
+#include "retronomicon/lib/ui/nine_slice_panel_component.h"
+#include "retronomicon/lib/graphic/window.h"
+#include "retronomicon/lib/math/rect.h"
 
 namespace retronomicon::lib::conversation {
-
+    using retronomicon::lib::math::Rect;
+    using retronomicon::lib::ui::NineSlicePanelComponent;
     /**
      * @brief A visual novel style textbox that renders dialog nodes with typewriter effect.
      */
     class VNTextBoxComponent : public core::Component,public core::Renderable {
     public:
         VNTextBoxComponent(std::shared_ptr<asset::FontAsset> font,
-                           std::shared_ptr<ui::NineSlicePanelComponent> panel,
+                           NineSlicePanelComponent* panel,
                            int maxWidth,
                            int padding = 12);
 
-        void setNode(std::shared_ptr<ConversationNode> node);
+        void setNode(ConversationNode* node);
 
         /// Call once per frame to update typewriter progression
         void update(float deltaTime) override;
@@ -32,21 +36,24 @@ namespace retronomicon::lib::conversation {
         // Now matches Renderable
         void render(SDL_Renderer* renderer) override;
 
+        Rect getSize() override;
+
         /// Advance to show the full text immediately
         void skipToFullText();
 
         /// Check if the entire node text has been revealed
         bool isFinished() const { return m_finished; }
+        core::TransformComponent* m_transform = nullptr;
 
     private:
         std::shared_ptr<asset::FontAsset> m_font;
-        std::shared_ptr<ui::NineSlicePanelComponent> m_panel;
-        std::shared_ptr<ConversationNode> m_node;
-        core::TransformComponent* m_transform = nullptr;
+        NineSlicePanelComponent* m_panel;
+        ConversationNode* m_node;
 
         std::vector<std::string> m_wrappedLines;
 
         int m_maxWidth;
+        int m_minHeight = 200;
         int m_padding;
 
         float m_charDelay = 0.03f;     // seconds between letters

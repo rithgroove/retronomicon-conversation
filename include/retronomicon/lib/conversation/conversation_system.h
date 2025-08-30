@@ -5,9 +5,14 @@
 namespace retronomicon::lib::conversation {
 
 class ConversationSystem : public retronomicon::lib::core::System {
-public:
-    void update(float dt, ConversationScene* scene);
-    void render(SDL_Renderer* renderer, ConversationScene* scene);
-};
+    public:
+        /**
+         * @brief method to update all component
+         * 
+         * @param dt time interval since last update
+         * @param objects the game objects (might change to Entity Later)
+         */
+        void update(float dt, retronomicon::lib::core::Entity* entities)  override;
+    };
 
 } // namespace retronomicon::lib::conversation
