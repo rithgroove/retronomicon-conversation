@@ -50,6 +50,8 @@ namespace retronomicon::lib::conversation {
                 ConversationNode node;
                 node.setId(id);
 
+                if (nodeData.contains("background")) 
+                    node.setBackground(nodeData["background"].get<std::string>());
                 if (nodeData.contains("speaker")) 
                     node.setSpeaker(nodeData["speaker"].get<std::string>());
                 if (nodeData.contains("text")) 
