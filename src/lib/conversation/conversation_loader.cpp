@@ -44,7 +44,13 @@ namespace retronomicon::lib::conversation {
 
     std::shared_ptr<ConversationScene> ConversationLoader::parseJson(const json& j) {
         auto scene = std::make_shared<ConversationScene>();
-
+        if (j.contains("background")){
+            for (auto it = j["background"].begin(); it != j["background"].end(); ++it)
+            {
+                std::cout << "[Loader] "<<it.key() <<" : "<< it.value() <<std::endl;
+                scene->loadBackground(it.value(),it.key());
+            }
+        }
         if (j.contains("nodes")) {
             for (auto& [id, nodeData] : j["nodes"].items()) {
                 ConversationNode node;

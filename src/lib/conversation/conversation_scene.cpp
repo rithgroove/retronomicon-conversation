@@ -2,6 +2,7 @@
 #include "retronomicon/lib/conversation/vn_textbox_component.h"
 #include "retronomicon/lib/conversation/conversation_system.h"
 #include "retronomicon/lib/ui/nine_slice_panel_component.h"
+#include "retronomicon/lib/graphic/sprite_component.h"
 #include "retronomicon/lib/graphic/render_system.h"
 #include <iostream>
 
@@ -9,6 +10,7 @@ namespace retronomicon::lib::conversation{
     using retronomicon::lib::ui::NineSlicePanelComponent;
     using retronomicon::lib::graphic::Window;
     using retronomicon::lib::graphic::RenderSystem;
+    using retronomicon::lib::graphic::SpriteComponent;
     ConversationScene::ConversationScene()
     : Scene("conversation"),m_currentNode(nullptr) {}
 
@@ -20,8 +22,20 @@ namespace retronomicon::lib::conversation{
                 
             }
         }
+        // ----------------- Panel size (customize later)--------------------
+        int windowWidth = Window::getWidth();
+        int windowHeight = Window::getHeight();
+        int panelWidth = windowWidth/2;
+        int panelHeight = 200;
+
+
+
 
         if (!m_nodes.empty()) {
+
+            for (const auto& [key, value] : m_backgroundPaths) {
+                m_backgrounds[key] = m_assetManager->loadImage(value,key);
+            }            
             std::cout<<"m_nodes ga empty" << std::endl;
             // Default to the node called "start" if it exists
             auto it = m_nodes.find("start");
@@ -29,19 +43,61 @@ namespace retronomicon::lib::conversation{
                 m_currentNode = &it->second;
             }
 
+
+            Entity* imageBackground = new Entity("VN Text Box");
+
+            //-------- Build Sprite Component for background ---------------
+            std::cout << "[ConversationScene]current background " << m_currentNode->getBackground()<<std::endl;
+            const std::string& bgKey = m_currentNode->getBackground();
+
+            auto it2 = m_backgrounds.find(bgKey);
+
+
+            if (it2 == m_backgrounds.end() || !(it2->second) ){
+                std::cout << "[ConversationScene] Background not found or failed to load: " << bgKey << std::endl;
+                return; // or fallback to default background
+            }
+
+
+            std::shared_ptr<ImageAsset> backgroundAsset = m_backgrounds[m_currentNode->getBackground()];
+            std::cout << "[ConversationScene] backgroundAsset aman"<<std::endl;
+            std::cout << backgroundAsset->to_string() <<std::endl;
+            int imageWidth = backgroundAsset->getWidth();
+            int imageHeight = backgroundAsset->getHeight();
+            std::cout << "[ConversationScene] crash di get witdh/ height"<<std::endl;
+            float scaling = float(windowWidth) / float(imageWidth);
+            if (float(windowHeight)/float(imageHeight)> scaling){
+                scaling = float(windowHeight)/float(imageHeight);
+            }
+
+            auto* spriteBackground = imageBackground->addComponent<SpriteComponent>(backgroundAsset);
+
+
+
+            // spriteBackground->setImageAsset(this->m_nineSliceImage);
+            // spriteBackground->setSlices(16, 16, 16, 16); // default slice sizes, adjust as needed
+            // spriteBackground->setSize(windowWidth, panelHeight);
+
+            TransformComponent* imageBackgroundTransform = imageBackground->addComponent<TransformComponent>(windowWidth/2.0f,windowHeight/2.0f,0.0f,1.0f,1.0f);
+            imageBackgroundTransform->setRotation(0.0f);
+
+            //--------- initiate background -------------------
+            imageBackground->start();
+
+            //--------- add background as child entity -------------------
+            this->addChildEntity(imageBackground);
+
+
             Entity* background = new Entity("VN Text Box");
-            // ----------------- Panel size (customize later)--------------------
-            int windowWidth = Window::getWidth();
-            int windowHeight = Window::getHeight();
-            int panelWidth = windowWidth/2;
-            int panelHeight = 200;
 
             //-------- Build Transform Component for background ---------------
             TransformComponent* backgroundTransform = background->addComponent<TransformComponent>(windowWidth/2.0,windowHeight,0.0f,1.0f,1.0f);
             backgroundTransform->setAnchor(0.5f,1.0f);
             backgroundTransform->setRotation(0.0f);
 
-            //-------- Build Sprite Component for background ---------------
+
+
+            //-------- Build nineslice Component for  text background ---------------
             auto* nineSlice = background->addComponent<NineSlicePanelComponent>();
             nineSlice->setImageAsset(this->m_nineSliceImage);
             nineSlice->setSlices(16, 16, 16, 16); // default slice sizes, adjust as needed
@@ -83,6 +139,9 @@ namespace retronomicon::lib::conversation{
         return m_currentNode;
     }
 
+    void ConversationScene::loadBackground(std::string filePath,std::string key){
+        m_backgroundPaths[key] =filePath;
+    }
 
     void ConversationScene::setupSystem(){
         //setup input map and update inputstate to use thesep
