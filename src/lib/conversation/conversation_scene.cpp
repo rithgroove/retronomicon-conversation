@@ -15,6 +15,12 @@ namespace retronomicon::lib::conversation{
     void ConversationScene::init() {
         std::cout<<"init kepanggil" << std::endl;
         this->setupSystem();
+        if (!m_font){
+            if (m_assetManager){
+                
+            }
+        }
+
         if (!m_nodes.empty()) {
             std::cout<<"m_nodes ga empty" << std::endl;
             // Default to the node called "start" if it exists
