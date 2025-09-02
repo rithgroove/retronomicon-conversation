@@ -3,7 +3,7 @@
 #include <memory>
 #include "retronomicon/lib/core/entity.h"  // assuming this exists in your ECS
 
-namespace retronomicon::lib::conversation {
+namespace retronomicon::lib::conversation::data{
 
 	class Speaker {
 	public:

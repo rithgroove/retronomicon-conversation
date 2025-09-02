@@ -1,8 +1,8 @@
-#include "retronomicon/lib/conversation/speaker.h"
+#include "retronomicon/lib/conversation/data/speaker.h"
 #include "retronomicon/lib/animation/animation_component.h"
 #include <iostream>
 
-namespace retronomicon::lib::conversation {
+namespace retronomicon::lib::conversation::data{
 
 void Speaker::setExpression(const std::string& expression) {
     m_currentExpression = expression;

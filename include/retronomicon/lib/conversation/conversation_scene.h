@@ -5,7 +5,7 @@
 #include "retronomicon/lib/asset/image_asset.h"
 #include "retronomicon/lib/asset/font_asset.h"
 #include "retronomicon/lib/engine/game_engine.h"
-#include "conversation_node.h"
+#include "retronomicon/lib/conversation/data/conversation_node.h"
 #include <unordered_map>
 
 namespace retronomicon::lib::conversation {
@@ -13,6 +13,7 @@ namespace retronomicon::lib::conversation {
     using retronomicon::lib::asset::AssetManager;
     using retronomicon::lib::asset::FontAsset;
     using retronomicon::lib::engine::GameEngine;
+    using retronomicon::lib::conversation::data::ConversationNode;
     class ConversationScene : public retronomicon::lib::core::Scene {
     public:
         ConversationScene();

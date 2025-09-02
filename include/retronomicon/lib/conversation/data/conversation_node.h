@@ -5,7 +5,7 @@
 #include "choice.h"
 #include "action.h"
 
-namespace retronomicon::lib::conversation {
+namespace retronomicon::lib::conversation::data{
 
     class ConversationNode {
     public:

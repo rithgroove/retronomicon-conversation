@@ -1,6 +1,6 @@
-#include "retronomicon/lib/conversation/conversation_node.h"
+#include "retronomicon/lib/conversation/data/conversation_node.h"
 
-namespace retronomicon::lib::conversation {
+namespace retronomicon::lib::conversation::data{
 
     ConversationNode::ConversationNode() 
         : m_id(""),

@@ -1,7 +1,7 @@
 #include <sstream>
-#include "retronomicon/lib/conversation/action.h"
+#include "retronomicon/lib/conversation/data/action.h"
 
-namespace retronomicon::lib::conversation{
+namespace retronomicon::lib::conversation::data{
 
     /***************************** Construtor *****************************/
 

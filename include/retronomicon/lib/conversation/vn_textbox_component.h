@@ -6,7 +6,7 @@
 #include <memory>
 
 #include "retronomicon/lib/asset/font_asset.h"
-#include "retronomicon/lib/conversation/conversation_node.h"
+#include "retronomicon/lib/conversation/data/conversation_node.h"
 #include "retronomicon/lib/ui/nine_slice_panel_component.h"
 #include "retronomicon/lib/core/component.h"
 #include "retronomicon/lib/core/transform_component.h"
@@ -18,6 +18,7 @@
 namespace retronomicon::lib::conversation {
     using retronomicon::lib::math::Rect;
     using retronomicon::lib::ui::NineSlicePanelComponent;
+    using retronomicon::lib::conversation::data::ConversationNode;
     /**
      * @brief A visual novel style textbox that renders dialog nodes with typewriter effect.
      */

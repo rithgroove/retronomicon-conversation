@@ -2,12 +2,15 @@
 #include <nlohmann/json.hpp>
 #include <fstream>
 #include <iostream>
-#include "retronomicon/lib/conversation/conversation_node.h"
-#include "retronomicon/lib/conversation/choice.h"
-#include "retronomicon/lib/conversation/action.h"
+#include "retronomicon/lib/conversation/data/conversation_node.h"
+#include "retronomicon/lib/conversation/data/choice.h"
+#include "retronomicon/lib/conversation/data/action.h"
 
 namespace retronomicon::lib::conversation {
     using json = nlohmann::json;
+    using retronomicon::lib::conversation::data::ConversationNode;
+    using retronomicon::lib::conversation::data::Choice;
+    using retronomicon::lib::conversation::data::Action;
 
     std::shared_ptr<ConversationScene> ConversationLoader::loadFromJSON(const std::string& filename) {
         std::ifstream file(filename);

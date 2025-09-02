@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-namespace retronomicon::lib::conversation{
+namespace retronomicon::lib::conversation::data{
     class Action {
         public:
             /***************************** Constructor *****************************/
