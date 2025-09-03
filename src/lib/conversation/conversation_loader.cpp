@@ -5,12 +5,13 @@
 #include "retronomicon/lib/conversation/data/conversation_node.h"
 #include "retronomicon/lib/conversation/data/choice.h"
 #include "retronomicon/lib/conversation/data/action.h"
-
+#include "retronomicon/lib/graphic/sprite_component.h"
 namespace retronomicon::lib::conversation {
     using json = nlohmann::json;
     using retronomicon::lib::conversation::data::ConversationNode;
     using retronomicon::lib::conversation::data::Choice;
     using retronomicon::lib::conversation::data::Action;
+    using retronomicon::lib::graphic::SpriteComponent;
 
     std::shared_ptr<ConversationScene> ConversationLoader::loadFromJSON(const std::string& filename) {
         std::ifstream file(filename);
