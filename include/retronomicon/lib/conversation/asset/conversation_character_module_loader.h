@@ -5,22 +5,18 @@
 #include "retronomicon/lib/core/entity.h"
 #include "retronomicon/lib/core/character.h"
 #include "retronomicon/lib/asset/asset_manager.h"
+#include "retronomicon/lib/asset/character_module_loader.h"
 
 namespace retronomicon::lib::conversation::asset {
+    using retronomicon::lib::asset::CharacterModuleLoader;
+    using retronomicon::lib::core::Character;
+    class ConversationCharacterModuleLoader : public CharacterModuleLoader{
+        public:
+        ConversationCharacterModuleLoader();
 
-class ConversationCharacterModuleLoader {
-public:
-    ConversationCharacterModuleLoader() = default;
+        [[nodiscard]] bool canLoad(const nlohmann::json& json) const noexcept;
+        void load(std::shared_ptr<Character>& character, const nlohmann::json& json) override;
 
-    void setAssetManager(std::shared_ptr<retronomicon::lib::asset::AssetManager> assetManager) noexcept {
-        m_assetManager = std::move(assetManager);
-    }
-
-    [[nodiscard]] bool canLoad(const nlohmann::json& json) const noexcept;
-    [[nodiscard]] std::shared_ptr<retronomicon::lib::core::Character> load(const nlohmann::json& json) const;
-
-private:
-    std::shared_ptr<retronomicon::lib::asset::AssetManager> m_assetManager;
-};
+    };
 
 } // namespace retronomicon::lib::conversation::asset

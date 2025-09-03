@@ -11,23 +11,25 @@ namespace retronomicon::lib::conversation::asset {
     using namespace retronomicon::lib::graphic;
     using namespace retronomicon::lib::animation;
     using namespace retronomicon::lib::asset;
+    ConversationCharacterModuleLoader::ConversationCharacterModuleLoader(){
+
+    }
 
     [[nodiscard]] bool ConversationCharacterModuleLoader::canLoad(const nlohmann::json& json) const noexcept {
         return json.contains("retronomicon-conversation");
     }
 
-    [[nodiscard]] std::shared_ptr<Character> ConversationCharacterModuleLoader::load(const nlohmann::json& json) const {
+    void ConversationCharacterModuleLoader::load(std::shared_ptr<Character>& character, const nlohmann::json& json) {
         if (!m_assetManager) {
             std::cerr << "[ConversationCharacterModuleLoader] No AssetManager set!\n";
-            return nullptr;
+            return;
         }
 
         if (!canLoad(json)) {
             std::cerr << "[ConversationCharacterModuleLoader] Invalid JSON: missing retronomicon-conversation\n";
-            return nullptr;
+            return;
         }
 
-        auto character = std::make_shared<Character>();
         auto convData = json["retronomicon-conversation"];
 
         // --- Sprites ---
@@ -67,8 +69,6 @@ namespace retronomicon::lib::conversation::asset {
 
         // Attach AnimationComponent to Character entity
         // character->addComponent(animationComponent);
-
-        return character;
     }
 
 } // namespace retronomicon::lib::conversation::asset
