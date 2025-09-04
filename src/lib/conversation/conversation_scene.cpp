@@ -22,6 +22,7 @@ namespace retronomicon::lib::conversation{
                 
             }
         }
+
         // ----------------- Panel size (customize later)--------------------
         int windowWidth = Window::getWidth();
         int windowHeight = Window::getHeight();
@@ -73,7 +74,6 @@ namespace retronomicon::lib::conversation{
             auto* spriteBackground = imageBackground->addComponent<SpriteComponent>(backgroundAsset);
 
 
-
             // spriteBackground->setImageAsset(this->m_nineSliceImage);
             // spriteBackground->setSlices(16, 16, 16, 16); // default slice sizes, adjust as needed
             // spriteBackground->setSize(windowWidth, panelHeight);
@@ -86,6 +86,25 @@ namespace retronomicon::lib::conversation{
 
             //--------- add background as child entity -------------------
             this->addChildEntity(imageBackground);
+
+
+            auto cdb = m_engine->getCharacterDatabase();
+            auto jenna = cdb->getCharacter("jenna");
+
+            auto jennaVNEntity = jenna->getModuleEntity("retronomicon-conversation");
+            if (jennaVNEntity){
+                auto jenna_transform =  jennaVNEntity->getComponent<TransformComponent>();
+                jenna_transform->setPosition(windowWidth/2.0f,windowHeight);
+                jenna_transform->setAnchor(0.5f,1.0f);  
+                jenna->setActiveModule("retronomicon-conversation");
+                this->addChildEntity(jennaVNEntity);
+
+            }else{
+                std::cout << "###########################\nNULL KK\n###########################\n"<<std::endl;
+            }
+            // auto jenna_transform =  jennaVNEntity->getComponent<TransformComponent>();
+            // jenna_transform->setPosition(windowWidth/2.0f,windowHeight);
+            // jenna_transform->setAnchor(0.5f,1.0f);  
 
 
             Entity* background = new Entity("VN Text Box");
