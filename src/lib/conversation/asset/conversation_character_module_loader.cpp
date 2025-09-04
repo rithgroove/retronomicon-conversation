@@ -72,6 +72,8 @@ namespace retronomicon::lib::conversation::asset {
                 animationComponent->addClip(clip);
             }
         }
+
+        character->registerModuleEntity("retronomicon-conversation", vnEntity); 
         // Attach AnimationComponent to Character entity
         // character->addComponent(animationComponent);
     }
