@@ -2,8 +2,10 @@
 #include "retronomicon/lib/animation/animation_clip.h"
 #include "retronomicon/lib/animation/animation_frame.h"
 #include "retronomicon/lib/animation/animation_component.h"
+#include "retronomicon/lib/core/transform_component.h"
 #include "retronomicon/lib/graphic/sprite_component.h"
 #include <iostream>
+#include <sstream>
 
 namespace retronomicon::lib::conversation::asset {
 
@@ -33,40 +35,43 @@ namespace retronomicon::lib::conversation::asset {
         auto convData = json["retronomicon-conversation"];
 
         // --- Sprites ---
-        // std::unordered_map<std::string, std::shared_ptr<ImageAsset>> spriteAssets;
-        // if (convData.contains("sprites") && convData["sprites"].contains("files")) {
-        //     for (const auto& spriteJson : convData["sprites"]["files"]) {
-        //         std::string path = spriteJson.value("path", "");
-        //         std::string spriteName = spriteJson.value("name", "");
-        //         if (!spriteName.empty() && !path.empty()) {
-        //             auto imageAsset = m_assetManager->loadImage(path, spriteName);
-        //             if (imageAsset) {
-        //                 spriteAssets[spriteName] = imageAsset;
-        //             }
-        //         }
-        //     }
-        // }
+        std::shared_ptr<ImageAsset> asset = nullptr;
+        if (convData.contains("sprite") && convData["sprite"].contains("filepath")) {
+            auto asset = m_assetManager->loadImage(convData["sprite"]["filepath"], convData["sprite"]["asset_name"]);
+        }
 
+        Entity* vnEntity = new Entity("tachi");              // construct directly
+        vnEntity->setVisible();
+
+        vnEntity->addComponent<SpriteComponent>(asset);
+
+        vnEntity->addComponent<TransformComponent>();
+
+
+        int width = convData["sprite"]["width"];
+        int height = convData["sprite"]["width"];
         // --- Expressions as AnimationClip ---
-        // auto animationComponent = std::make_shared<AnimationComponent>();
-        // if (convData.contains("sprites") && convData["sprites"].contains("expression")) {
-        //     for (const auto& expr : convData["sprites"]["expression"]) {
-        //         std::string exprName = expr.value("name", "");
-        //         std::string assetName = expr.value("asset_name", "");
-        //         int x = expr.value("asset_x_pos", 0);
-        //         int y = expr.value("asset_y_pos", 0);
-
-        //         auto it = spriteAssets.find(assetName);
-        //         if (it != spriteAssets.end()) {
-        //             auto sprite = std::make_shared<Sprite>(it->second, it->second->getWidth(), it->second->getHeight());
-        //             auto frame = std::make_shared<AnimationFrame>(sprite, x, y);
-        //             auto clip = std::make_shared<AnimationClip>();
-        //             clip->addFrame(frame);
-        //             animationComponent->addClip(exprName, clip);
-        //         }
-        //     }
-        // }
-
+        if (convData.contains("sprites") && convData["sprites"].contains("expression")) {
+            shared_ptr<AnimationClip> defaultClip = nullptr;
+            std::vector<shared_ptr<AnimationClip>> clips;
+            for (const auto& expr : convData["sprites"]["expression"]) {
+                std::string exprName = expr.value("name", "");
+                int x = expr.value("asset_x_pos", 0) * width;
+                int y = expr.value("asset_y_pos", 0) * height;
+                std::vector<AnimationFrame> frames;
+                frames.push_back(AnimationFrame(x, y,width,height,6000)) ;
+                auto clip = std::make_shared<AnimationClip>(frames,exprName,true);
+                if (exprName == "default"){
+                    defaultClip = clip;
+                }else{
+                    clips.push_back(clip);
+                }
+            }
+            auto animationComponent = vnEntity->addComponent<AnimationComponent>(defaultClip);
+            for (auto clip : clips){
+                animationComponent->addClip(clip);
+            }
+        }
         // Attach AnimationComponent to Character entity
         // character->addComponent(animationComponent);
     }
