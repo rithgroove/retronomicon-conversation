@@ -24,13 +24,11 @@ namespace retronomicon::lib::conversation{
     }
 
     void VNTextBoxComponent::update(float deltaTime) {
-        std::cout<< "Masuk Update" <<std::endl;
+        // std::cout<< "Masuk Update" <<std::endl;
         if (!m_node){
-            std::cout<< "[update] null node" <<std::endl;
             return;
         }
         if (m_finished){
-            std::cout<< "[update] m_finished" <<std::endl;
             return;        
         }
 
@@ -48,13 +46,11 @@ namespace retronomicon::lib::conversation{
     }
 
     void VNTextBoxComponent::render(SDL_Renderer* renderer) {
-        std::cout<< "Masuk render" <<std::endl;
+        // std::cout<< "Masuk render" <<std::endl;
         if (!m_node){
-            std::cout<< "[render] m_node nul" <<std::endl;
             return;
         }
         if (!m_transform){
-            std::cout<< "[render] m_transform null" <<std::endl;
             return;        
         }
 
@@ -80,9 +76,9 @@ namespace retronomicon::lib::conversation{
 
             size_t charsToDraw = std::min(charsRemaining, line.size());
             std::string visible = line.substr(0, charsToDraw);
-            std::cout << "visible = " <<visible<<std::endl;
-            std::cout << "x =  " << x + m_padding <<std::endl;
-            std::cout << "y =  " << drawY <<std::endl;
+            // std::cout << "visible = " <<visible<<std::endl;
+            // std::cout << "x =  " << x + m_padding <<std::endl;
+            // std::cout << "y =  " << drawY <<std::endl;
             m_font->renderText(renderer, visible, x + m_padding, drawY,SDL_Color{255, 255, 255, 255});
 
             charsRemaining -= charsToDraw;

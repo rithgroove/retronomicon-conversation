@@ -72,7 +72,7 @@ namespace retronomicon::lib::conversation{
             }
 
             auto* spriteBackground = imageBackground->addComponent<SpriteComponent>(backgroundAsset);
-
+            // imageBackground->setInvisible();
 
             // spriteBackground->setImageAsset(this->m_nineSliceImage);
             // spriteBackground->setSlices(16, 16, 16, 16); // default slice sizes, adjust as needed
@@ -90,13 +90,15 @@ namespace retronomicon::lib::conversation{
 
             auto cdb = m_engine->getCharacterDatabase();
             auto jenna = cdb->getCharacter("jenna");
-
             auto jennaVNEntity = jenna->getModuleEntity("retronomicon-conversation");
+
+
             if (jennaVNEntity){
                 auto jenna_transform =  jennaVNEntity->getComponent<TransformComponent>();
                 jenna_transform->setPosition(windowWidth/2.0f,windowHeight);
                 jenna_transform->setAnchor(0.5f,1.0f);  
                 jenna->setActiveModule("retronomicon-conversation");
+                jennaVNEntity->start();
                 this->addChildEntity(jennaVNEntity);
 
             }else{

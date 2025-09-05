@@ -4,6 +4,7 @@
 #include "retronomicon/lib/animation/animation_component.h"
 #include "retronomicon/lib/core/transform_component.h"
 #include "retronomicon/lib/graphic/sprite_component.h"
+#include "retronomicon/lib/graphic/window.h"
 #include <iostream>
 #include <sstream>
 
@@ -37,7 +38,7 @@ namespace retronomicon::lib::conversation::asset {
         // --- Sprites ---
         std::shared_ptr<ImageAsset> asset = nullptr;
         if (convData.contains("sprite") && convData["sprite"].contains("filepath")) {
-            auto asset = m_assetManager->loadImage(convData["sprite"]["filepath"], convData["sprite"]["asset_name"]);
+            asset = m_assetManager->loadImage(convData["sprite"]["filepath"], convData["sprite"]["asset_name"]);
         }
 
         Entity* vnEntity = new Entity("tachi");              // construct directly
@@ -45,19 +46,30 @@ namespace retronomicon::lib::conversation::asset {
 
         vnEntity->addComponent<SpriteComponent>(asset);
 
-        vnEntity->addComponent<TransformComponent>();
+        auto transform = vnEntity->addComponent<TransformComponent>();
 
+        int windowHeight = Window::getHeight();
 
         int width = convData["sprite"]["width"];
-        int height = convData["sprite"]["width"];
+        int height = convData["sprite"]["height"];
+
+        float scale = (1.2* windowHeight) / (1.0f * height);
+        transform->setScale(scale,scale);
+
         // --- Expressions as AnimationClip ---
-        if (convData.contains("sprites") && convData["sprites"].contains("expression")) {
+        if (convData.contains("sprite") && convData["sprite"].contains("expression")) {
             shared_ptr<AnimationClip> defaultClip = nullptr;
             std::vector<shared_ptr<AnimationClip>> clips;
-            for (const auto& expr : convData["sprites"]["expression"]) {
+            for (const auto& expr : convData["sprite"]["expression"]) {
                 std::string exprName = expr.value("name", "");
                 int x = expr.value("asset_x_pos", 0) * width;
                 int y = expr.value("asset_y_pos", 0) * height;
+
+                std::cout << "[ConversationCharacterModuleLoader] Source x : "<< x << std::endl;
+                std::cout << "[ConversationCharacterModuleLoader] Source y : "<< y << std::endl;
+                std::cout << "[ConversationCharacterModuleLoader] Source width : "<< width << std::endl;
+                std::cout << "[ConversationCharacterModuleLoader] Source height : "<< height << std::endl;
+
                 std::vector<AnimationFrame> frames;
                 frames.push_back(AnimationFrame(x, y,width,height,6000)) ;
                 auto clip = std::make_shared<AnimationClip>(frames,exprName,true);
