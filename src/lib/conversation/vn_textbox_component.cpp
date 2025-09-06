@@ -58,7 +58,7 @@ namespace retronomicon::lib::conversation{
         int y = renderPos.y;
 
         int boxW = m_maxWidth - 2 * m_padding;
-        int boxH = static_cast<int>(m_wrappedLines.size()) * m_font->getLineHeight() + 2 * m_padding;
+        int boxH = static_cast<int>(m_wrappedLines.size()) * m_font->getLineHeight();
         if (boxH < m_minHeight){
             boxH = m_minHeight;
         }
@@ -106,7 +106,7 @@ namespace retronomicon::lib::conversation{
             if (c == ' ' || c == '\n') {
                 // Try placing the word
                 int testWidth = m_font->measureTextWidth(currentLine + currentWord + " ");
-                if (testWidth > m_maxWidth && !currentLine.empty()) {
+                if (testWidth >= m_maxWidth-(4 *m_padding) && !currentLine.empty()) {
                     m_wrappedLines.push_back(currentLine);
                     currentLine = currentWord + " ";
                 } else {
@@ -126,7 +126,7 @@ namespace retronomicon::lib::conversation{
         // Handle trailing word
         if (!currentWord.empty()) {
             int testWidth = m_font->measureTextWidth(currentLine + currentWord);
-            if (testWidth > m_maxWidth && !currentLine.empty()) {
+            if (testWidth >= m_maxWidth-(4 *m_padding) && !currentLine.empty()) {
                 m_wrappedLines.push_back(currentLine);
                 currentLine = currentWord;
             } else {
