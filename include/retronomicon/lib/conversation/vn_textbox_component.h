@@ -19,13 +19,13 @@ namespace retronomicon::lib::conversation {
     using retronomicon::lib::math::Rect;
     using retronomicon::lib::ui::NineSlicePanelComponent;
     using retronomicon::lib::conversation::data::ConversationNode;
+    using retronomicon::lib::asset::FontAsset;
     /**
      * @brief A visual novel style textbox that renders dialog nodes with typewriter effect.
      */
     class VNTextBoxComponent : public core::Component,public core::Renderable {
     public:
-        VNTextBoxComponent(std::shared_ptr<asset::FontAsset> font,
-                           NineSlicePanelComponent* panel,
+        VNTextBoxComponent(std::shared_ptr<FontAsset> font,
                            int maxWidth,
                            int padding = 12);
 
@@ -46,8 +46,9 @@ namespace retronomicon::lib::conversation {
         bool isFinished() const { return m_finished; }
         core::TransformComponent* m_transform = nullptr;
 
+        void setBackgroundPanel(NineSlicePanelComponent* panel) noexcept{m_panel = panel;}
     private:
-        std::shared_ptr<asset::FontAsset> m_font;
+        std::shared_ptr<FontAsset> m_font;
         NineSlicePanelComponent* m_panel;
         ConversationNode* m_node;
 

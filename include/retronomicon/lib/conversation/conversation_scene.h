@@ -6,6 +6,8 @@
 #include "retronomicon/lib/asset/font_asset.h"
 #include "retronomicon/lib/engine/game_engine.h"
 #include "retronomicon/lib/conversation/data/conversation_node.h"
+#include "vn_textbox_component.h"
+#include "retronomicon/lib/input/input_system.h"
 #include <unordered_map>
 
 namespace retronomicon::lib::conversation {
@@ -14,6 +16,8 @@ namespace retronomicon::lib::conversation {
     using retronomicon::lib::asset::FontAsset;
     using retronomicon::lib::engine::GameEngine;
     using retronomicon::lib::conversation::data::ConversationNode;
+    using retronomicon::lib::input::InputSystem;
+    class VNTextboxComponent;
     class ConversationScene : public retronomicon::lib::core::Scene {
     public:
         ConversationScene();
@@ -62,6 +66,14 @@ namespace retronomicon::lib::conversation {
         std::unordered_map<std::string, ConversationNode> m_nodes;
         void loadImage(std::string filePath,std::string key);
 
+        bool isCurrentTextboxFinished(){
+            return m_textBoxComponent->isFinished();
+        }
+
+        void finishCurrenTextbox(){
+            m_textBoxComponent->skipToFullText();
+        }
+
     private:
         std::string m_fontPath = "asset/font/manaspc.ttf";
         std::string m_fontName = "manaspc.ttf";
@@ -77,11 +89,12 @@ namespace retronomicon::lib::conversation {
         std::shared_ptr<AssetManager> m_assetManager;
 
         ConversationNode* m_currentNode;
+        VNTextBoxComponent *m_textBoxComponent;
 
         std::unordered_map<std::string, std::shared_ptr<ImageAsset>> m_backgrounds;
         std::unordered_map<std::string, std::string> m_backgroundPaths;
         void setupSystem();
-
+        InputMap* generateInputMap();
     };
  
 } // namespace retronomicon::lib::conversation

@@ -1,9 +1,10 @@
 #include "retronomicon/lib/conversation/conversation_scene.h"
-#include "retronomicon/lib/conversation/vn_textbox_component.h"
 #include "retronomicon/lib/conversation/conversation_system.h"
 #include "retronomicon/lib/ui/nine_slice_panel_component.h"
 #include "retronomicon/lib/graphic/sprite_component.h"
 #include "retronomicon/lib/graphic/render_system.h"
+#include "retronomicon/lib/input/input_system.h"
+#include "retronomicon/lib/conversation/input/conversation_input_component.h"
 #include <iostream>
 
 namespace retronomicon::lib::conversation{
@@ -11,6 +12,7 @@ namespace retronomicon::lib::conversation{
     using retronomicon::lib::graphic::Window;
     using retronomicon::lib::graphic::RenderSystem;
     using retronomicon::lib::graphic::SpriteComponent;
+    using retronomicon::lib::conversation::input::ConversationInputComponent;
     ConversationScene::ConversationScene()
     : Scene("conversation"),m_currentNode(nullptr) {}
 
@@ -21,7 +23,9 @@ namespace retronomicon::lib::conversation{
             if (m_assetManager){
                 
             }
+
         }
+
 
         // ----------------- Panel size (customize later)--------------------
         int windowWidth = Window::getWidth();
@@ -31,7 +35,7 @@ namespace retronomicon::lib::conversation{
 
 
 
-
+        this->addComponent<ConversationInputComponent>();
         if (!m_nodes.empty()) {
 
             for (const auto& [key, value] : m_backgroundPaths) {
@@ -119,20 +123,23 @@ namespace retronomicon::lib::conversation{
 
 
             //-------- Build nineslice Component for  text background ---------------
+            m_textBoxComponent = background->addComponent<VNTextBoxComponent>(m_font, 800,20);
+            m_textBoxComponent->setNode(m_currentNode);
+            m_textBoxComponent->m_transform = backgroundTransform;
+
             auto* nineSlice = background->addComponent<NineSlicePanelComponent>();
             nineSlice->setImageAsset(this->m_nineSliceImage);
             nineSlice->setSlices(16, 16, 16, 16); // default slice sizes, adjust as needed
             nineSlice->setSize(panelWidth, panelHeight);
 
-            auto* vnTextBox = background->addComponent<VNTextBoxComponent>(m_font, nineSlice, 800,20);
-            vnTextBox->setNode(m_currentNode);
-            vnTextBox->m_transform = backgroundTransform;
+            m_textBoxComponent->setBackgroundPanel(nineSlice);
 
             //--------- initiate background -------------------
             background->start();
 
             //--------- add background as child entity -------------------
             this->addChildEntity(background);
+            this->start();
             // this->m_childEntities.push_back(background);
         }
     }
@@ -164,10 +171,23 @@ namespace retronomicon::lib::conversation{
         m_backgroundPaths[key] =filePath;
     }
 
+    InputMap* ConversationScene::generateInputMap(){
+        std::cout << "[Splash Scene] setup input map" <<std::endl;
+        InputMap* inputMap = new InputMap();
+        inputMap->bindAction(SDL_SCANCODE_SPACE, "confirm");
+        inputMap->bindAction(SDL_SCANCODE_RETURN, "confirm");
+        inputMap->bindAction(SDL_SCANCODE_A, "left");
+        inputMap->bindAction(SDL_SCANCODE_W, "up");
+        inputMap->bindAction(SDL_SCANCODE_S, "down");
+        inputMap->bindAction(SDL_SCANCODE_D, "right");
+        inputMap->bindAction(SDL_SCANCODE_ESCAPE,"quit");
+        return inputMap;        
+    }
+
     void ConversationScene::setupSystem(){
         //setup input map and update inputstate to use thesep
-        // auto inputState = m_engine->getInputState();
-        // inputState->setInputMap(this->generateInputMap());
+        auto inputState = m_engine->getInputState();
+        inputState->setInputMap(this->generateInputMap());
 
         // setup systems
         std::cout << "[Splash Scene] setup systems" <<std::endl;
@@ -180,7 +200,7 @@ namespace retronomicon::lib::conversation{
         // setup scene change system to trigger scene change to the next one
         // this->addSystem(std::make_unique<SceneChangeSystem>(m_engine));
         // setup input system to skip to next scene
-        // this->addSystem(std::make_unique<InputSystem>(inputState));
+        this->addSystem(std::make_unique<InputSystem>(inputState));
         // this->addSystem(std::make_unique<MenuInteractionSystem>(inputState));
         // this->addSystem(std::make_unique<ExitGameSystem>(m_engine));
     }

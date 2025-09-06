@@ -6,12 +6,10 @@
 namespace retronomicon::lib::conversation{
 
 
-    VNTextBoxComponent::VNTextBoxComponent(std::shared_ptr<asset::FontAsset> font,
-                                       NineSlicePanelComponent* panel,
+    VNTextBoxComponent::VNTextBoxComponent(std::shared_ptr<FontAsset> font,
                                        int maxWidth,
                                        int padding)
     : m_font(std::move(font)),
-      m_panel(std::move(panel)),
       m_maxWidth(maxWidth),
       m_padding(padding) {}
 
@@ -66,7 +64,7 @@ namespace retronomicon::lib::conversation{
         }
 
         m_panel->setSize(boxW, boxH);
-        m_panel->render(renderer);
+        // m_panel->render(renderer);
 
         size_t charsRemaining = m_currentCharIndex;
         int drawY = y + m_padding;
