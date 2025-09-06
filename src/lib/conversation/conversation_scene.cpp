@@ -67,6 +67,7 @@ namespace retronomicon::lib::conversation{
             std::cout << backgroundAsset->to_string() <<std::endl;
             int imageWidth = backgroundAsset->getWidth();
             int imageHeight = backgroundAsset->getHeight();
+            
             std::cout << "[ConversationScene] crash di get witdh/ height"<<std::endl;
             float scaling = float(windowWidth) / float(imageWidth);
             if (float(windowHeight)/float(imageHeight)> scaling){
@@ -76,7 +77,7 @@ namespace retronomicon::lib::conversation{
             m_backgroundComponent = imageBackground->addComponent<SpriteComponent>(backgroundAsset);
             // imageBackground->setInvisible();
 
-            TransformComponent* imageBackgroundTransform = imageBackground->addComponent<TransformComponent>(windowWidth/2.0f,windowHeight/2.0f,0.0f,1.0f,1.0f);
+            TransformComponent* imageBackgroundTransform = imageBackground->addComponent<TransformComponent>(windowWidth/2.0f,windowHeight/2.0f,0.0f,scaling,scaling);
             imageBackgroundTransform->setRotation(0.0f);
 
             //--------- initiate background -------------------
