@@ -53,7 +53,7 @@ namespace retronomicon::lib::conversation::asset {
         int width = convData["sprite"]["width"];
         int height = convData["sprite"]["height"];
 
-        float scale = (1.2* windowHeight) / (1.0f * height);
+        float scale = (0.8* windowHeight) / (1.0f * height);
         transform->setScale(scale,scale);
 
         // --- Expressions as AnimationClip ---
