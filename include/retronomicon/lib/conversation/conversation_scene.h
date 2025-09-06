@@ -6,6 +6,8 @@
 #include "retronomicon/lib/asset/font_asset.h"
 #include "retronomicon/lib/engine/game_engine.h"
 #include "retronomicon/lib/conversation/data/conversation_node.h"
+#include "retronomicon/lib/graphic/sprite_component.h"
+#include "retronomicon/lib/animation/animation_component.h"
 #include "vn_textbox_component.h"
 #include "retronomicon/lib/input/input_system.h"
 #include <unordered_map>
@@ -17,6 +19,8 @@ namespace retronomicon::lib::conversation {
     using retronomicon::lib::engine::GameEngine;
     using retronomicon::lib::conversation::data::ConversationNode;
     using retronomicon::lib::input::InputSystem;
+    using retronomicon::lib::graphic::SpriteComponent;
+    using retronomicon::lib::animation::AnimationComponent;
     class VNTextboxComponent;
     class ConversationScene : public retronomicon::lib::core::Scene {
     public:
@@ -90,6 +94,8 @@ namespace retronomicon::lib::conversation {
 
         ConversationNode* m_currentNode;
         VNTextBoxComponent *m_textBoxComponent;
+        SpriteComponent *m_backgroundComponent;
+        AnimationComponent *m_mainCharaComponent;
 
         std::unordered_map<std::string, std::shared_ptr<ImageAsset>> m_backgrounds;
         std::unordered_map<std::string, std::string> m_backgroundPaths;

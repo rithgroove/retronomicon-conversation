@@ -1,7 +1,6 @@
 #include "retronomicon/lib/conversation/conversation_scene.h"
 #include "retronomicon/lib/conversation/conversation_system.h"
 #include "retronomicon/lib/ui/nine_slice_panel_component.h"
-#include "retronomicon/lib/graphic/sprite_component.h"
 #include "retronomicon/lib/graphic/render_system.h"
 #include "retronomicon/lib/input/input_system.h"
 #include "retronomicon/lib/conversation/input/conversation_input_component.h"
@@ -11,7 +10,6 @@ namespace retronomicon::lib::conversation{
     using retronomicon::lib::ui::NineSlicePanelComponent;
     using retronomicon::lib::graphic::Window;
     using retronomicon::lib::graphic::RenderSystem;
-    using retronomicon::lib::graphic::SpriteComponent;
     using retronomicon::lib::conversation::input::ConversationInputComponent;
     ConversationScene::ConversationScene()
     : Scene("conversation"),m_currentNode(nullptr) {}
@@ -26,7 +24,6 @@ namespace retronomicon::lib::conversation{
 
         }
 
-
         // ----------------- Panel size (customize later)--------------------
         int windowWidth = Window::getWidth();
         int windowHeight = Window::getHeight();
@@ -39,8 +36,9 @@ namespace retronomicon::lib::conversation{
         if (!m_nodes.empty()) {
 
             for (const auto& [key, value] : m_backgroundPaths) {
+                std::cout <<"[Conversation Scene] Init background image '" <<key<<"' = '" <<value<<"'"<<std::endl;
                 m_backgrounds[key] = m_assetManager->loadImage(value,key);
-            }            
+            }
             std::cout<<"m_nodes ga empty" << std::endl;
             // Default to the node called "start" if it exists
             auto it = m_nodes.find("start");
@@ -75,12 +73,8 @@ namespace retronomicon::lib::conversation{
                 scaling = float(windowHeight)/float(imageHeight);
             }
 
-            auto* spriteBackground = imageBackground->addComponent<SpriteComponent>(backgroundAsset);
+            m_backgroundComponent = imageBackground->addComponent<SpriteComponent>(backgroundAsset);
             // imageBackground->setInvisible();
-
-            // spriteBackground->setImageAsset(this->m_nineSliceImage);
-            // spriteBackground->setSlices(16, 16, 16, 16); // default slice sizes, adjust as needed
-            // spriteBackground->setSize(windowWidth, panelHeight);
 
             TransformComponent* imageBackgroundTransform = imageBackground->addComponent<TransformComponent>(windowWidth/2.0f,windowHeight/2.0f,0.0f,1.0f,1.0f);
             imageBackgroundTransform->setRotation(0.0f);
@@ -104,6 +98,8 @@ namespace retronomicon::lib::conversation{
                 jenna->setActiveModule("retronomicon-conversation");
                 jennaVNEntity->start();
                 this->addChildEntity(jennaVNEntity);
+
+                m_mainCharaComponent = jennaVNEntity->getComponent<AnimationComponent>();
 
             }else{
                 std::cout << "###########################\nNULL KK\n###########################\n"<<std::endl;
@@ -160,8 +156,27 @@ namespace retronomicon::lib::conversation{
         auto it = m_nodes.find(nodeId);
         if (it != m_nodes.end()) {
             m_currentNode = &it->second;
+            m_textBoxComponent->setNode(m_currentNode);
+
+            if (!m_currentNode->getBackground().empty()) {
+                const auto& bg = m_currentNode->getBackground();
+                std::cout << "[Conversation Scene] before find bg : "<< bg  <<std::endl;
+                auto itBg = m_backgrounds.find(bg);
+                if (itBg != m_backgrounds.end()) {
+                    std::cout << "[Conversation Scene] change BG" <<std::endl;
+                    m_backgroundComponent->changeAsset(itBg->second);
+                    std::cout << "[Conversation Scene] selesai change BG" <<std::endl;
+                }
+            }
+            if (!m_currentNode->getExpression().empty()) {
+                const auto& expression = m_currentNode->getExpression();
+                m_mainCharaComponent->changeClip(expression);
+            }
         }
     }
+
+
+
 
     ConversationNode* ConversationScene::getCurrentNode() {
         return m_currentNode;
