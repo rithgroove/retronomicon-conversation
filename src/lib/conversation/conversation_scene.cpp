@@ -29,63 +29,18 @@ namespace retronomicon::lib::conversation{
         int windowHeight = Window::getHeight();
         int panelWidth = windowWidth/2;
         int panelHeight = 200;
-
-
+        this->loadBackgrounds();
 
         this->addComponent<ConversationInputComponent>();
         if (!m_nodes.empty()) {
-
-            for (const auto& [key, value] : m_backgroundPaths) {
-                std::cout <<"[Conversation Scene] Init background image '" <<key<<"' = '" <<value<<"'"<<std::endl;
-                m_backgrounds[key] = m_assetManager->loadImage(value,key);
-            }
-            std::cout<<"m_nodes ga empty" << std::endl;
-            // Default to the node called "start" if it exists
+            // ----------------- Find Starting Node --------------------
             auto it = m_nodes.find("start");
             if (it != m_nodes.end()) {
                 m_currentNode = &it->second;
             }
 
-
-            Entity* imageBackground = new Entity("VN Text Box");
-
-            //-------- Build Sprite Component for background ---------------
-            std::cout << "[ConversationScene]current background " << m_currentNode->getBackground()<<std::endl;
-            const std::string& bgKey = m_currentNode->getBackground();
-
-            auto it2 = m_backgrounds.find(bgKey);
-
-
-            if (it2 == m_backgrounds.end() || !(it2->second) ){
-                std::cout << "[ConversationScene] Background not found or failed to load: " << bgKey << std::endl;
-                return; // or fallback to default background
-            }
-
-
-            std::shared_ptr<ImageAsset> backgroundAsset = m_backgrounds[m_currentNode->getBackground()];
-            std::cout << "[ConversationScene] backgroundAsset aman"<<std::endl;
-            std::cout << backgroundAsset->to_string() <<std::endl;
-            int imageWidth = backgroundAsset->getWidth();
-            int imageHeight = backgroundAsset->getHeight();
-            
-            std::cout << "[ConversationScene] crash di get witdh/ height"<<std::endl;
-            float scaling = float(windowWidth) / float(imageWidth);
-            if (float(windowHeight)/float(imageHeight)> scaling){
-                scaling = float(windowHeight)/float(imageHeight);
-            }
-
-            m_backgroundComponent = imageBackground->addComponent<SpriteComponent>(backgroundAsset);
-            // imageBackground->setInvisible();
-
-            TransformComponent* imageBackgroundTransform = imageBackground->addComponent<TransformComponent>(windowWidth/2.0f,windowHeight/2.0f,0.0f,scaling,scaling);
-            imageBackgroundTransform->setRotation(0.0f);
-
-            //--------- initiate background -------------------
-            imageBackground->start();
-
-            //--------- add background as child entity -------------------
-            this->addChildEntity(imageBackground);
-
+            // ----------------- Setup Background --------------------
+            this->setupBackground();
 
             auto cdb = m_engine->getCharacterDatabase();
             auto jenna = cdb->getCharacter("jenna");
@@ -141,17 +96,53 @@ namespace retronomicon::lib::conversation{
         }
     }
 
-    // void ConversationScene::update(float dt) {
-    //     // Example: simple debug print of current node
-    //     if (m_currentNode) {
-    //         std::cout << m_currentNode->getSpeaker() << ": " 
-    //                   << m_currentNode->getText() << std::endl;
-    //     }
-    // }
+    void ConversationScene::loadBackgrounds(){
+        for (const auto& [key, value] : m_backgroundPaths) {
+            std::cout <<"[Conversation Scene] Init background image '" <<key<<"' = '" <<value<<"'"<<std::endl;
+            m_backgrounds[key] = m_assetManager->loadImage(value,key);
+        }
+    }
+    void ConversationScene::setBackground(std::string name){
+        auto it2 = m_backgrounds.find(name);
+        if (it2 == m_backgrounds.end() || !(it2->second) ){
+            std::cout << "[ConversationScene] Background not found or failed to load: " << name << std::endl;
+            return; // or fallback to default background
+        }
+    }
 
-    // void ConversationScene::render(SDL_Renderer* renderer) {
-    //     // For now, placeholder. You’ll eventually render portraits + text box here.
-    // }
+    void ConversationScene::setupBackground(){
+            int windowWidth = Window::getWidth();
+            int windowHeight = Window::getHeight();
+            Entity* imageBackground = new Entity("VN Background");
+
+            //-------- Get active background name in current node ---------------
+            const std::string& bgKey = m_currentNode->getBackground();
+            this->setBackground(bgKey);   
+
+            //-------- Get the asset ---------------
+            std::shared_ptr<ImageAsset> backgroundAsset = m_backgrounds[m_currentNode->getBackground()];
+
+            //-------- Recalculate scaling ---------------
+            int imageWidth = backgroundAsset->getWidth();
+            int imageHeight = backgroundAsset->getHeight();
+            
+            float scaling = float(windowWidth) / float(imageWidth);
+            if (float(windowHeight)/float(imageHeight)> scaling){
+                scaling = float(windowHeight)/float(imageHeight);
+            }
+
+            //-------- Build Sprite Component for background ---------------
+            m_backgroundComponent = imageBackground->addComponent<SpriteComponent>(backgroundAsset);
+            
+            //-------- Build Transform Component for background ---------------
+            TransformComponent* imageBackgroundTransform = imageBackground->addComponent<TransformComponent>(windowWidth/2.0f,windowHeight/2.0f,0.0f,scaling,scaling);
+
+            //--------- initiate background -------------------
+            imageBackground->start();
+
+            //--------- add background as child entity -------------------
+            this->addChildEntity(imageBackground);
+    }
 
     void ConversationScene::setCurrentNode(const std::string& nodeId) {
         auto it = m_nodes.find(nodeId);
@@ -183,7 +174,7 @@ namespace retronomicon::lib::conversation{
         return m_currentNode;
     }
 
-    void ConversationScene::loadBackground(std::string filePath,std::string key){
+    void ConversationScene::registerBackground(std::string filePath,std::string key){
         m_backgroundPaths[key] =filePath;
     }
 

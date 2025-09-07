@@ -52,7 +52,7 @@ namespace retronomicon::lib::conversation {
             for (auto it = j["background"].begin(); it != j["background"].end(); ++it)
             {
                 std::cout << "[Loader] "<<it.key() <<" : "<< it.value() <<std::endl;
-                scene->loadBackground(it.value(),it.key());
+                scene->registerBackground(it.value(),it.key());
             }
         }
         if (j.contains("nodes")) {

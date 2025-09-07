@@ -63,7 +63,7 @@ namespace retronomicon::lib::conversation {
                 std::cout << "[ConversationScene] AssetManager is not set, have you called setEngine yet?"<<std::endl;
             }            
         }
-        void loadBackground(std::string path, std::string name);
+        void registerBackground(std::string path, std::string name);
 
         void setCurrentNode(const std::string& nodeId);
         ConversationNode* getCurrentNode();
@@ -77,7 +77,7 @@ namespace retronomicon::lib::conversation {
         void finishCurrenTextbox(){
             m_textBoxComponent->skipToFullText();
         }
-
+        void setBackground(std::string name);
     private:
         std::string m_fontPath = "asset/font/manaspc.ttf";
         std::string m_fontName = "manaspc.ttf";
@@ -101,6 +101,8 @@ namespace retronomicon::lib::conversation {
         std::unordered_map<std::string, std::string> m_backgroundPaths;
         void setupSystem();
         InputMap* generateInputMap();
+        void loadBackgrounds();
+        void setupBackground();
     };
  
 } // namespace retronomicon::lib::conversation
