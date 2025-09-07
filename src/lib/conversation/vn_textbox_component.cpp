@@ -2,9 +2,9 @@
 #include <SDL.h>
 #include <algorithm>
 #include <iostream>
+#include "retronomicon/lib/core/entity.h"
 
 namespace retronomicon::lib::conversation{
-
 
     VNTextBoxComponent::VNTextBoxComponent(std::shared_ptr<FontAsset> font,
                                        int maxWidth,
@@ -19,6 +19,18 @@ namespace retronomicon::lib::conversation{
         m_timeAccumulator = 0.0f;
         m_finished = false;
         regenerateWrappedText();
+    }
+
+    void VNTextBoxComponent::start(){
+        m_transform = getOwner()->getComponent<TransformComponent>();
+        if (!m_transform) {
+            std::cout << "[VNTextBoxComponent] Missing TransformComponent on entity.\n"<<std::endl;
+        }
+
+        m_panel = getOwner()->getComponent<NineSlicePanelComponent>();
+        if (!m_panel) {
+            std::cout << "[VNTextBoxComponent] Missing NineSlicePanelComponent (Vn text box background panel) on entity.\n"<<std::endl;
+        }
     }
 
     void VNTextBoxComponent::update(float deltaTime) {

@@ -42,6 +42,7 @@ namespace retronomicon::lib::conversation{
             // ----------------- Setup Background --------------------
             this->setupBackground();
 
+            // ----------------- Setup Character --------------------
             auto cdb = m_engine->getCharacterDatabase();
             auto jenna = cdb->getCharacter("jenna");
             auto jennaVNEntity = jenna->getModuleEntity("retronomicon-conversation");
@@ -60,37 +61,10 @@ namespace retronomicon::lib::conversation{
             }else{
                 std::cout << "###########################\nNULL KK\n###########################\n"<<std::endl;
             }
-            // auto jenna_transform =  jennaVNEntity->getComponent<TransformComponent>();
-            // jenna_transform->setPosition(windowWidth/2.0f,windowHeight);
-            // jenna_transform->setAnchor(0.5f,1.0f);  
 
+            // ----------------- Setup VNTextBox --------------------
+            this->setupVNTextBox();
 
-            Entity* background = new Entity("VN Text Box");
-
-            //-------- Build Transform Component for background ---------------
-            TransformComponent* backgroundTransform = background->addComponent<TransformComponent>(windowWidth/2.0,windowHeight,0.0f,1.0f,1.0f);
-            backgroundTransform->setAnchor(0.5f,1.0f);
-            backgroundTransform->setRotation(0.0f);
-
-
-
-            //-------- Build nineslice Component for  text background ---------------
-            m_textBoxComponent = background->addComponent<VNTextBoxComponent>(m_font, 800,20);
-            m_textBoxComponent->setNode(m_currentNode);
-            m_textBoxComponent->m_transform = backgroundTransform;
-
-            auto* nineSlice = background->addComponent<NineSlicePanelComponent>();
-            nineSlice->setImageAsset(this->m_nineSliceImage);
-            nineSlice->setSlices(16, 16, 16, 16); // default slice sizes, adjust as needed
-            nineSlice->setSize(panelWidth, panelHeight);
-
-            m_textBoxComponent->setBackgroundPanel(nineSlice);
-
-            //--------- initiate background -------------------
-            background->start();
-
-            //--------- add background as child entity -------------------
-            this->addChildEntity(background);
             this->start();
             // this->m_childEntities.push_back(background);
         }
@@ -102,76 +76,107 @@ namespace retronomicon::lib::conversation{
             m_backgrounds[key] = m_assetManager->loadImage(value,key);
         }
     }
+
     void ConversationScene::setBackground(std::string name){
-        auto it2 = m_backgrounds.find(name);
-        if (it2 == m_backgrounds.end() || !(it2->second) ){
+        auto backgroundIterator = m_backgrounds.find(name);
+        if (backgroundIterator == m_backgrounds.end() || !(backgroundIterator->second) ){
             std::cout << "[ConversationScene] Background not found or failed to load: " << name << std::endl;
             return; // or fallback to default background
+        }else{
+            if (m_backgroundComponent){
+                m_backgroundComponent->changeAsset(backgroundIterator->second);
+            }
         }
     }
 
+    void ConversationScene::setupVNTextBox(){
+        // ----------------- Panel size (customize later)--------------------
+        int windowWidth = Window::getWidth();
+        int windowHeight = Window::getHeight();
+        int panelWidth = windowWidth;
+        int panelHeight = 200;
+
+        // ----------------- Setup VN TextBox --------------------
+        Entity* textbox = new Entity("VN Text Box");
+
+        //-------- Build Transform Component for textbox ---------------
+        TransformComponent* backgroundTransform = textbox->addComponent<TransformComponent>(windowWidth/2.0,windowHeight,0.0f,1.0f,1.0f);
+        backgroundTransform->setAnchor(0.5f,1.0f); // setup anchor bottom mid
+
+        //-------- Build vn textbox component ---------------
+        m_textBoxComponent = textbox->addComponent<VNTextBoxComponent>(m_font, 800,20);
+        m_textBoxComponent->setNode(m_currentNode);
+
+        //-------- Build nine slice component ---------------
+        auto* nineSlice = textbox->addComponent<NineSlicePanelComponent>();
+        nineSlice->setImageAsset(this->m_nineSliceImage);
+        nineSlice->setSlices(16, 16, 16, 16); // default slice sizes, adjust as needed
+        nineSlice->setSize(panelWidth, panelHeight);
+
+        //--------- initiate background -------------------
+        textbox->start();
+
+        //--------- add background as child entity -------------------
+        this->addChildEntity(textbox);
+    }
+    
     void ConversationScene::setupBackground(){
-            int windowWidth = Window::getWidth();
-            int windowHeight = Window::getHeight();
-            Entity* imageBackground = new Entity("VN Background");
+        //-------- Create background entity ---------------
+        Entity* imageBackground = new Entity("VN Background");
 
-            //-------- Get active background name in current node ---------------
-            const std::string& bgKey = m_currentNode->getBackground();
-            this->setBackground(bgKey);   
+        //-------- Get active background name in current node ---------------
+        const std::string& bgKey = m_currentNode->getBackground();
 
-            //-------- Get the asset ---------------
-            std::shared_ptr<ImageAsset> backgroundAsset = m_backgrounds[m_currentNode->getBackground()];
+        //-------- Get the asset ---------------
+        std::shared_ptr<ImageAsset> backgroundAsset = m_backgrounds[bgKey];
 
-            //-------- Recalculate scaling ---------------
-            int imageWidth = backgroundAsset->getWidth();
-            int imageHeight = backgroundAsset->getHeight();
-            
-            float scaling = float(windowWidth) / float(imageWidth);
-            if (float(windowHeight)/float(imageHeight)> scaling){
-                scaling = float(windowHeight)/float(imageHeight);
-            }
+        //-------- Recalculate scaling ---------------
+        int windowWidth = Window::getWidth();
+        int windowHeight = Window::getHeight();
+        int imageWidth = backgroundAsset->getWidth();
+        int imageHeight = backgroundAsset->getHeight();
+        
+        float scaling = float(windowWidth) / float(imageWidth);
+        if (float(windowHeight)/float(imageHeight)> scaling){
+            scaling = float(windowHeight)/float(imageHeight);
+        }
 
-            //-------- Build Sprite Component for background ---------------
-            m_backgroundComponent = imageBackground->addComponent<SpriteComponent>(backgroundAsset);
-            
-            //-------- Build Transform Component for background ---------------
-            TransformComponent* imageBackgroundTransform = imageBackground->addComponent<TransformComponent>(windowWidth/2.0f,windowHeight/2.0f,0.0f,scaling,scaling);
+        //-------- Build Sprite Component for background ---------------
+        m_backgroundComponent = imageBackground->addComponent<SpriteComponent>(backgroundAsset);
 
-            //--------- initiate background -------------------
-            imageBackground->start();
+        //-------- Build Transform Component for background ---------------
+        TransformComponent* imageBackgroundTransform = imageBackground->addComponent<TransformComponent>(windowWidth/2.0f,windowHeight/2.0f,0.0f,scaling,scaling);
 
-            //--------- add background as child entity -------------------
-            this->addChildEntity(imageBackground);
+        //--------- initiate background -------------------
+        imageBackground->start();
+
+        //--------- add background as child entity -------------------
+        this->addChildEntity(imageBackground);
     }
 
+
     void ConversationScene::setCurrentNode(const std::string& nodeId) {
+ 
+        //--------- find the target node -------------------
         auto it = m_nodes.find(nodeId);
         if (it != m_nodes.end()) {
+            //--------- set current node target node -------------------
             m_currentNode = &it->second;
+
+            //--------- set textbox node to use the newly updated m_currentNode -------------------
             m_textBoxComponent->setNode(m_currentNode);
 
+            //--------- check if the background is empty -------------------
             if (!m_currentNode->getBackground().empty()) {
-                const auto& bg = m_currentNode->getBackground();
-                std::cout << "[Conversation Scene] before find bg : "<< bg  <<std::endl;
-                auto itBg = m_backgrounds.find(bg);
-                if (itBg != m_backgrounds.end()) {
-                    std::cout << "[Conversation Scene] change BG" <<std::endl;
-                    m_backgroundComponent->changeAsset(itBg->second);
-                    std::cout << "[Conversation Scene] selesai change BG" <<std::endl;
-                }
+                this->setBackground(m_currentNode->getBackground());
             }
+
+            //--------- change expression -------------------
             if (!m_currentNode->getExpression().empty()) {
                 const auto& expression = m_currentNode->getExpression();
                 m_mainCharaComponent->changeClip(expression);
             }
         }
-    }
-
-
-
-
-    ConversationNode* ConversationScene::getCurrentNode() {
-        return m_currentNode;
     }
 
     void ConversationScene::registerBackground(std::string filePath,std::string key){

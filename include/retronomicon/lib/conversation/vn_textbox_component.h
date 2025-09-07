@@ -38,18 +38,19 @@ namespace retronomicon::lib::conversation {
         void render(SDL_Renderer* renderer) override;
 
         Rect getSize() override;
+        
+        void start() override;
 
         /// Advance to show the full text immediately
         void skipToFullText();
 
         /// Check if the entire node text has been revealed
         bool isFinished() const { return m_finished; }
-        core::TransformComponent* m_transform = nullptr;
-
-        void setBackgroundPanel(NineSlicePanelComponent* panel) noexcept{m_panel = panel;}
+        
     private:
         std::shared_ptr<FontAsset> m_font;
-        NineSlicePanelComponent* m_panel;
+        TransformComponent* m_transform = nullptr;
+        NineSlicePanelComponent* m_panel = nullptr;
         ConversationNode* m_node;
 
         std::vector<std::string> m_wrappedLines;

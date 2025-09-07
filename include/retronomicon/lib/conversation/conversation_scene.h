@@ -66,7 +66,9 @@ namespace retronomicon::lib::conversation {
         void registerBackground(std::string path, std::string name);
 
         void setCurrentNode(const std::string& nodeId);
-        ConversationNode* getCurrentNode();
+        ConversationNode* getCurrentNode(){
+            return m_currentNode;
+        }
         std::unordered_map<std::string, ConversationNode> m_nodes;
         void loadImage(std::string filePath,std::string key);
 
@@ -99,6 +101,7 @@ namespace retronomicon::lib::conversation {
 
         std::unordered_map<std::string, std::shared_ptr<ImageAsset>> m_backgrounds;
         std::unordered_map<std::string, std::string> m_backgroundPaths;
+        void setupVNTextBox();
         void setupSystem();
         InputMap* generateInputMap();
         void loadBackgrounds();
