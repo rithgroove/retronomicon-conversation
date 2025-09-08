@@ -97,7 +97,7 @@ namespace retronomicon::lib::conversation {
         ConversationNode* m_currentNode;
         VNTextBoxComponent *m_textBoxComponent;
         SpriteComponent *m_backgroundComponent;
-        AnimationComponent *m_mainCharaComponent;
+        AnimationComponent *m_mainCharaComponent = nullptr;
 
         std::unordered_map<std::string, std::shared_ptr<ImageAsset>> m_backgrounds;
         std::unordered_map<std::string, std::string> m_backgroundPaths;

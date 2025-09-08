@@ -88,6 +88,10 @@ namespace retronomicon::lib::conversation{
 
 
         if (characterVNEntity){
+            if (m_mainCharaComponent){
+                //remove previous mainCharacComponent 
+                this->removeChildEntity(m_mainCharaComponent->getOwner());
+            }
             auto character_transform =  characterVNEntity->getComponent<TransformComponent>();
             character_transform->setPosition(windowWidth/2.0f,windowHeight);
             character_transform->setAnchor(0.5f,1.0f);  
@@ -96,7 +100,6 @@ namespace retronomicon::lib::conversation{
             this->addChildEntity(characterVNEntity);
 
             m_mainCharaComponent = characterVNEntity->getComponent<AnimationComponent>();
-
         }else{
             std::cout << "###########################\nNULL KK\n###########################\n"<<std::endl;
         }
