@@ -94,9 +94,9 @@ namespace retronomicon::lib::conversation {
         GameEngine* m_engine;
         std::shared_ptr<AssetManager> m_assetManager;
 
-        ConversationNode* m_currentNode;
-        VNTextBoxComponent *m_textBoxComponent;
-        SpriteComponent *m_backgroundComponent;
+        ConversationNode* m_currentNode = nullptr;
+        VNTextBoxComponent *m_textBoxComponent = nullptr;
+        SpriteComponent *m_backgroundComponent = nullptr;
         AnimationComponent *m_mainCharaComponent = nullptr;
 
         std::unordered_map<std::string, std::shared_ptr<ImageAsset>> m_backgrounds;

@@ -98,7 +98,11 @@ namespace retronomicon::lib::conversation{
             character->setActiveModule("retronomicon-conversation");
             characterVNEntity->start();
             this->addChildEntity(characterVNEntity);
-
+            // hot fix. will need to rethink render position
+            if (m_textBoxComponent){
+                this->removeChildEntity(m_textBoxComponent->getOwner());
+                this->addChildEntity(m_textBoxComponent->getOwner());
+            }
             m_mainCharaComponent = characterVNEntity->getComponent<AnimationComponent>();
         }else{
             std::cout << "###########################\nNULL KK\n###########################\n"<<std::endl;
@@ -186,6 +190,11 @@ namespace retronomicon::lib::conversation{
             //--------- check if the background is empty -------------------
             if (!m_currentNode->getBackground().empty()) {
                 this->setBackground(m_currentNode->getBackground());
+            }
+
+            //--------- check if the character is empty -------------------
+            if (!m_currentNode->getSpeaker().empty()) {
+                this->setupCharacter(m_currentNode->getSpeaker());
             }
 
             //--------- change expression -------------------
