@@ -43,24 +43,7 @@ namespace retronomicon::lib::conversation{
             this->setupBackground();
 
             // ----------------- Setup Character --------------------
-            auto cdb = m_engine->getCharacterDatabase();
-            auto jenna = cdb->getCharacter("jenna");
-            auto jennaVNEntity = jenna->getModuleEntity("retronomicon-conversation");
-
-
-            if (jennaVNEntity){
-                auto jenna_transform =  jennaVNEntity->getComponent<TransformComponent>();
-                jenna_transform->setPosition(windowWidth/2.0f,windowHeight);
-                jenna_transform->setAnchor(0.5f,1.0f);  
-                jenna->setActiveModule("retronomicon-conversation");
-                jennaVNEntity->start();
-                this->addChildEntity(jennaVNEntity);
-
-                m_mainCharaComponent = jennaVNEntity->getComponent<AnimationComponent>();
-
-            }else{
-                std::cout << "###########################\nNULL KK\n###########################\n"<<std::endl;
-            }
+            this->setupCharacter(m_currentNode->getSpeaker());
 
             // ----------------- Setup VNTextBox --------------------
             this->setupVNTextBox();
@@ -88,6 +71,37 @@ namespace retronomicon::lib::conversation{
             }
         }
     }
+
+    void ConversationScene::setupCharacter(std::string name){
+        // ----------------- Panel size (customize later)--------------------
+        int windowWidth = Window::getWidth();
+        int windowHeight = Window::getHeight();
+        int panelWidth = windowWidth;
+        int panelHeight = 200;
+
+        // ----------------- Get Character DB (customize later)--------------------
+        auto cdb = m_engine->getCharacterDatabase();
+
+        // ----------------- Get Character DB (customize later)--------------------
+        auto character = cdb->getCharacter(name);
+        auto characterVNEntity = character->getModuleEntity("retronomicon-conversation");
+
+
+        if (characterVNEntity){
+            auto character_transform =  characterVNEntity->getComponent<TransformComponent>();
+            character_transform->setPosition(windowWidth/2.0f,windowHeight);
+            character_transform->setAnchor(0.5f,1.0f);  
+            character->setActiveModule("retronomicon-conversation");
+            characterVNEntity->start();
+            this->addChildEntity(characterVNEntity);
+
+            m_mainCharaComponent = characterVNEntity->getComponent<AnimationComponent>();
+
+        }else{
+            std::cout << "###########################\nNULL KK\n###########################\n"<<std::endl;
+        }
+    }
+    
 
     void ConversationScene::setupVNTextBox(){
         // ----------------- Panel size (customize later)--------------------

@@ -106,6 +106,7 @@ namespace retronomicon::lib::conversation {
         InputMap* generateInputMap();
         void loadBackgrounds();
         void setupBackground();
+        void setupCharacter(std::string name);
     };
  
 } // namespace retronomicon::lib::conversation
