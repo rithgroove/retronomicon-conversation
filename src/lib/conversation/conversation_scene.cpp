@@ -19,9 +19,8 @@ namespace retronomicon::lib::conversation{
         this->setupSystem();
         if (!m_font){
             if (m_assetManager){
-                
+                this->loadFont();
             }
-
         }
 
         // ----------------- Panel size (customize later)--------------------
