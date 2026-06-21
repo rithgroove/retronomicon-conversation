@@ -57,6 +57,9 @@ cmake --build build --target conversation-console
 ./build/bin/conversation-console
 ```
 
+Link gameplay or examples against `retronomicon-conversation`; do not include
+the old `retronomicon/lib/conversation/...` headers in new code.
+
 ## Reference Project
 
 Use `~/Desktop/project-yuzu` as the reference for current behavior:
